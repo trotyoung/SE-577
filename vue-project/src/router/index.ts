@@ -18,19 +18,19 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue')
     },
     {
-        path: '/login',
-        name: 'login',
-        component: () => import('../pages/LoginPage.vue')
-    },
-    {
         path: '/list',
         name: 'list',
         component: () => import('../pages/ListPage.vue')
     },
     {
-        path: '/details',
-        name: 'details',
-        component: () => import('../pages/DetailsPage.vue')
+        path: '/search',
+        name: 'search',
+        component: () => import('../pages/Search.vue')
+    },
+    {
+        path: '/asearch',
+        name: 'advanced-search',
+        component: () => import('../pages/AdvancedSearch.vue')
     }
   ]
 })

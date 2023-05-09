@@ -1,0 +1,43 @@
+- repoName: ohmyzsh
+  repoURL: https://github.com/ohmyzsh/ohmyzsh.git
+  repoLanguage: shell
+
+- repoName: react
+  repoURL: https://github.com/facebook/react.git
+  repoLanguage: JavaScript
+
+- repoName: vue
+  repoURL: https://github.com/vuejs/vue.git
+  repoLanguage: JavaScript
+
+- repoName: kubernetes
+  repoURL: https://github.com/kubernetes/kubernetes.git
+  repoLanguage: go
+
+- repoName: prometheus
+  repoURL: https://github.com/prometheus/prometheus.git
+  repoLanguage: go
+
+- repoName: ga-cmd
+  repoURL: https://github.com/arcanericky/ga-cmd.git
+  repoLanguage: C
+
+- repoName: netdata
+  repoURL: https://github.com/netdata/netdata.git
+  repoLanguage: C
+
+- repoName: openstack
+  repoURL: https://github.com/openstack/openstack.git
+  repoLanguage: Python
+
+- repoName: jumpserver
+  repoURL: https://github.com/jumpserver/jumpserver.git
+  repoLanguage: Python
+
+- repoName: ansible
+  repoURL: https://github.com/ansible/ansible.git
+  repoLanguage: Python
+
+- repoName: pandas
+  repoURL: https://github.com/pandas-dev/pandas.git
+  repoLanguage: Python

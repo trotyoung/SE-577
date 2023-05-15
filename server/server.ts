@@ -6,7 +6,17 @@ const server = fastify({
     logger: true,
 });
 
+import fastifyHttpProxy from "@fastify/http-proxy";
+import dotenv from 'dotenv';
+import {GetGHProxySecureOptions, GetGHProxyOptions } from "./proxy";
 
+dotenv.config();
+
+let proxyOptsSecure = GetGHProxySecureOptions(process.env.GITHUB_ACCESS_TOKEN)
+server.register(fastifyHttpProxy, proxyOptsSecure)
+
+let proxyOpts = GetGHProxyOptions()
+server.register(fastifyHttpProxy, proxyOpts)
 
 let mockData: { repoName: string; repoURL: string; repoLanguage: string }[] = [];
 

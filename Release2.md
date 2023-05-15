@@ -1,3 +1,19 @@
+# Week 6 Deliverable
+
+## Integration with GitHub via server project
+
+### Secure access:
+- access the gists by url
+> http://localhost:5000/ghsecure/gists
+
+- access the gist of the hello world file by gist_id
+> http://localhost:5000/ghsecure/gists/b5e222c31972e1e64c31764c3826c0a2
+
+### Public access
+- starred repos of user
+> http://localhost:9500/ghproxy/users/trotyoung/starred
+
+
 # Frontend service project: vue-project
 
 ## Project Setup

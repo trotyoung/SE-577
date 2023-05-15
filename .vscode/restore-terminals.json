@@ -8,7 +8,17 @@
                 {
                     "name": "terminal",
                     "commands": [
-                        "cd vue-project"
+                        "cd vue-project && yarn dev"
+                    ]
+                }
+            ]
+        },
+        {
+            "splitTerminals": [
+                {
+                    "name": "terminal",
+                    "commands": [
+                        "cd server && yarn run server"
                     ]
                 }
             ]

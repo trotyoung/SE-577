@@ -8,7 +8,7 @@
                 {
                     "name": "terminal",
                     "commands": [
-                        "cd vue-project && yarn dev"
+                        "cd client && yarn && yarn dev"
                     ]
                 }
             ]
@@ -18,7 +18,7 @@
                 {
                     "name": "terminal",
                     "commands": [
-                        "cd server && yarn run server"
+                        "cd server && yarn && yarn run server"
                     ]
                 }
             ]

@@ -27,18 +27,12 @@ Open the browser and enter the URL: http://localhost:3000
 
 ## Backend service project: server
 
-
 ### Project setup
+
 #### Enter project directory and ake sure you have `node` and `yarn` installed
 ```sh
 cd server
 yarn
-```
-#### Install dependencies
-```sh
-yarn add fastify
-yarn add nodemon
-yarn add ts-node
 ```
 
 #### Then to run the server by executing

@@ -1,4 +1,8 @@
-# Week 6 Deliverable
+# Week 8 Deliverable
+
+
+## Architectural model
+Here is the PDF diagram for `Architectural model`: [architectural-model.pdf](./architectural-model.pdf)
 
 
 ## Frontend service project: client

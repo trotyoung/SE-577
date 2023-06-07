@@ -1,6 +1,6 @@
 <template>
     <div class="home">
-        <h1>Viewing my ⭐️ed repositories goes here</h1>
+        <h1>Simply explore my GitHub</h1>
     </div>
 </template>
     

@@ -1,9 +1,15 @@
 <template>
     <div class="details">
-        <h1>Search repo by name</h1>
+        <h1>Search repo in multiple ways</h1>
     </div>
+    <p>Search by following Criteria:</p>
+    <input type="radio" id="repoName" name="repo" value="Repo Name" v-model="queryOption">
+    <label for="repoName">Repo Name</label><br>
+    <input type="radio" id="repoLanguage" name="repo" value="Repo Main Language" v-model="queryOption">
+    <label for="css">Repo Main Language</label><br>
+
     <p>
-        Repo name: <input type="text" v-model="repoName" @keypress="queryChanged" @keyup.delete="queryChanged" />
+        QueryVal: <input type="text" v-model="queryValue" @keypress="queryChanged" @keyup.delete="queryChanged" />
     </p>
     <p>
         <button type="button" @click="fetchRepoInfo()" :disabled="shouldDisable">
@@ -11,13 +17,21 @@
         </button>
     </p>
 
-    <div v-if="!apiErrorInfo.isError && !queryIsDirty">
-        <p class="happy-text">Found repo with name: {{ repoName }}</p>
-        <p>
-            Repo Name: {{ repoData?.repoName }} <br />
-            Repo URL: <a v-bind:href=repoData?.repoURL>{{ repoData?.repoURL }}</a><br />
-            Repo Main Language: {{ repoData?.repoLanguage }} <br />
-        </p>
+    <div v-if="repoData.length > 0 && !queryIsDirty">
+        <p class="happy-text">Found repo as follows:</p>
+
+        <table>
+            <tr>
+                <th>Repo Name</th>
+                <th>Repo URL</th>
+                <th>Repo Main Language</th>
+            </tr>
+            <tr v-for="(repo, rowNum) in repoData">
+                <td>{{ repo.repoName }}</td>
+                <td><a v-bind:href=repo.repoURL>{{ repo.repoURL }}</a></td>
+                <td>{{ repo.repoLanguage }}</td>
+            </tr>
+        </table>
     </div>
 
     <p class="error-text" v-if="apiErrorInfo.isError && !queryIsDirty"> Unable to find this repo, code = {{
@@ -26,36 +40,60 @@
     
 <script lang="ts">
 export default {
-    name: 'SearchRepoPage',
+    name: 'Search',
 };
 </script>
     
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import type { RepoInterface, ErrorInterface } from './Interfaces';
 import axios, { AxiosError } from 'axios';
 
-
-const repoName = ref('')
-let repoData = ref<RepoInterface | undefined>()
+const queryOption = ref("Repo Name");  //default option
+const queryValue = ref("");
+const queryIsDirty = ref(false);
 const apiErrorInfo = ref<ErrorInterface>({ isError: false, errorCode: 0, errorMessage: "" })
-const queryIsDirty = ref(true)
+
+let repoData = ref<RepoInterface[]>([])
+
+const queryChanged = (e: Event) => {
+    queryIsDirty.value = true;
+    repoData.value = [];
+}
+
+const radioButtonChanged = watch(queryOption, () => {
+    queryIsDirty.value = true;
+    repoData.value = [];
+})
+
+const radioButtonChanged_NotUsed = watch(queryOption, (old: string, updated: string) => {
+    console.log(`RADIO BUTTON CHANGED ${old} ${updated}`)
+})
+
+
+const shouldDisable = computed(() => {
+    return queryValue.value.length > 0 ? false : true
+})
+
+let queryByRepoNamePrefix = `http://localhost:5000/search?name=`
+let queryByRepoLanguagePrefix = `http://localhost:5000/search?language=`
 
 const fetchRepoInfo = async () => {
-    queryIsDirty.value = false
-    let allRepoURI = `http://localhost:5000/repos/${repoName.value}`
+    queryIsDirty.value = false;
 
+    const apiPrefix = (queryOption.value == "Repo Name") ? queryByRepoNamePrefix : queryByRepoLanguagePrefix;
+    const apiURL = apiPrefix + queryValue.value;
+    console.log(apiURL);
     try {
-        let repoResp = await axios.get<RepoInterface>(allRepoURI)
-
-        if (repoResp.status == 200) {
+        let repoAPI = await axios.get<RepoInterface[]>(apiURL)
+        console.log(repoAPI);
+        if (repoAPI.status == 200) {
+            console.log(repoAPI)
             apiErrorInfo.value.isError = false;
-            apiErrorInfo.value.errorCode = repoResp.status;
-            apiErrorInfo.value.errorMessage = repoResp.statusText;
-            repoData.value = repoResp.data
+            apiErrorInfo.value.errorCode = repoAPI.status;
+            apiErrorInfo.value.errorMessage = repoAPI.statusText;
+            repoData.value = repoAPI.data
             console.log(repoData.value)
-        } else {
-            console.log("bad repo value")
         }
     } catch (err) {
         let e = err as AxiosError //convert to axios error type
@@ -64,35 +102,19 @@ const fetchRepoInfo = async () => {
             apiErrorInfo.value.errorCode = e.response.status;
             apiErrorInfo.value.errorMessage = e.request.statusText;
             console.log("Got Error Code ", e.response.status)
-        } else {
-            // Anything else
         }
     }
-}
-
-const shouldDisable = computed(() => {
-    return repoName.value.length > 0 ? false : true
-})
-
-const queryChanged = (e: Event) => {
-    queryIsDirty.value = true;
-    repoData.value = undefined;
 }
 
 </script>
     
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.emphasis-text{
+.error-text {
+    color: red;
+}
+
+.happy-text {
     color: green;
 }
-
-.error-text{
-    color:red;
-}
-
-.happy-text{
-    color:green;
-}
-
 </style>

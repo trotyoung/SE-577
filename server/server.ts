@@ -18,41 +18,10 @@ server.register(fastifyHttpProxy, proxyOptsSecure)
 let proxyOpts = GetGHProxyOptions()
 server.register(fastifyHttpProxy, proxyOpts)
 
-let mockData: { repoName: string; repoURL: string; repoLanguage: string }[] = [];
-
-try {
-    const yamlData = fs.readFileSync('./data.yaml', 'utf8');
-    mockData = yaml.load(yamlData);
-} catch (error) {
-    console.log(error);
-}
+let rawData: object[] = [];
 
 //setup CORS - this will be necessary for API requests from a VUE or any SPA app 
-server.register(cors, {
-    origin: "*"
-})
-
-server.get('/repos', async (request, reply) => {
-    return mockData;
-})
-
-interface requestName extends RequestGenericInterface {
-    Params: {
-        name: string
-    }
-}
-
-server.get<requestName>('/repos/:name', async (request, reply) => {
-    const { name } = request.params;
-    const repo = mockData.find(element => element.repoName == name);
-    if (repo) {
-        return repo;
-    } else {
-        let errObj = { error: `The repo with name: ${name} was not found.` };
-        reply.code(404).send(errObj);
-        return
-    }
-})
+server.register(cors, { origin: '*' });
 
 interface requestMulti extends RequestGenericInterface {
     Querystring: {
@@ -62,6 +31,28 @@ interface requestMulti extends RequestGenericInterface {
 }
 
 server.get<requestMulti>('/search', async (request, reply) => {
+
+    const apiURL = 'http://localhost:5000/ghproxy/users/trotyoung/starred';
+    const response = await fetch(apiURL);
+    if (response.ok) {
+        rawData = await response.json();
+    } else {
+        console.log(`Error: ${response.status}`);
+    }
+
+    let mockData: { repoName: string; repoURL: string; repoLanguage: string }[] = [];
+    let jsonData = JSON.parse(JSON.stringify(rawData));
+    for (let i = 0; i < jsonData.length; i++) {
+        const element = jsonData[i];
+        if (element.language == null) {
+            element.language = "null";
+        }
+        mockData.push({
+            repoName: element.name,
+            repoURL: element.html_url,
+            repoLanguage: element.language
+        })
+    }
     const { name, language } = request.query;
 
     if (name) {
